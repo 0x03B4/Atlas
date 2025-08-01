@@ -93,6 +93,7 @@ class Student(models.Model):
     qualification = models.ForeignKey(Qualification, on_delete=models.SET_NULL, null=True, blank=True)
     current_year = models.IntegerField(null=True, blank=True)
     current_semester = models.IntegerField(null=True, blank=True)
+    completed_modules = models.ManyToManyField(Module, blank=True)
 
     def __str__(self):
         return f"{self.student_number} - {self.user.get_full_name()}"
