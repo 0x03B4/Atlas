@@ -13,16 +13,31 @@ class AcademicRule(models.Model):
 
 
 class Lecturer(models.Model):
+    TITLE_CHOICES = [
+        ('Mr', 'Mr'),
+        ('Ms', 'Ms'),
+        ('Dr', 'Dr'),
+        ('Prof', 'Prof'),
+    ]
+    
+    LECTURER_TYPE_CHOICES = [
+        ('Junior Lecturer', 'Junior Lecturer'),
+        ('Lecturer', 'Lecturer'),
+        ('Senior Lecturer', 'Senior Lecturer'),
+        ('Associate Professor', 'Associate Professor'),
+        ('Professor', 'Professor'),
+    ]
+    
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, choices=TITLE_CHOICES, default='Mr')
     bio = models.TextField()
     email = models.EmailField()
     phone = models.CharField(max_length=20)
     office = models.CharField(max_length=100)
     consultation_hours = models.CharField(max_length=100)
     employee_id = models.CharField(max_length=20)
-    status = models.CharField(max_length=20)
+    lecturer_type = models.CharField(max_length=20, choices=LECTURER_TYPE_CHOICES, default='Lecturer')
     joined_year = models.IntegerField()
     expertise_areas = models.TextField()
 
