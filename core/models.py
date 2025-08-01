@@ -76,7 +76,6 @@ class QualificationModule(models.Model):
     MODULE_TYPE_CHOICES = [
         ('Core', 'Core'),
         ('Auxiliary', 'Auxiliary'),
-        ('Elective', 'Elective'),
     ]
     
     qualification = models.ForeignKey(Qualification, on_delete=models.CASCADE)
