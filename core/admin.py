@@ -1,3 +1,26 @@
 from django.contrib import admin
+from .models import (
+    Student,
+    Qualification,
+    Module,
+    Lecturer,
+    QualificationModule,
+    AcademicRule,
+    LearningOutcome 
+)
 
-# Register your models here.
+class LearningOutcomeInline(admin.TabularInline):
+    model = LearningOutcome
+    extra = 3
+
+class ModuleAdmin(admin.ModelAdmin):
+    inlines = [LearningOutcomeInline]
+    list_display = ('code', 'name', 'year', 'semester', 'credits')
+    search_fields = ('name', 'code')
+
+admin.site.register(Student)
+admin.site.register(Qualification)
+admin.site.register(Module, ModuleAdmin)
+admin.site.register(Lecturer)
+admin.site.register(QualificationModule)
+admin.site.register(AcademicRule)
