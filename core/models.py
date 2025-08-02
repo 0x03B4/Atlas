@@ -47,12 +47,17 @@ class Lecturer(models.Model):
 
 
 class Qualification(models.Model):
+    FORMAT_CHOICES = [
+        ('Contact', 'Contact'),
+        ('Distance', 'Distance'),
+    ]
+    
     name = models.CharField(max_length=255)
     description = models.TextField()
     duration_years = models.IntegerField()
     total_credits = models.IntegerField()
     total_modules = models.IntegerField()
-    format = models.CharField(max_length=50)
+    format = models.CharField(max_length=10, choices=FORMAT_CHOICES, default='Contact')
 
     def __str__(self):
         return self.name
