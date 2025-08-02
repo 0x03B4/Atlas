@@ -28,6 +28,13 @@ class Lecturer(models.Model):
         ('Professor', 'Professor'),
     ]
     
+    QUALIFICATION_CHOICES = [
+        ('BSc', 'BSc'),
+        ('Hons', 'Hons'),
+        ('MSc', 'MSc'),
+        ('PhD', 'PhD'),
+    ]
+    
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     title = models.CharField(max_length=100, choices=TITLE_CHOICES, default='Mr')
@@ -41,6 +48,8 @@ class Lecturer(models.Model):
     lecturer_type = models.CharField(max_length=20, choices=LECTURER_TYPE_CHOICES, default='Lecturer')
     joined_year = models.IntegerField()
     expertise_areas = models.TextField(help_text="Comma-separated list of expertise areas.")
+    highest_qualification = models.CharField(max_length=10, choices=QUALIFICATION_CHOICES, default='MSc', blank=True)
+    estimated_student_count = models.IntegerField(default=100, blank=True, help_text="Estimated number of students taught.")
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
