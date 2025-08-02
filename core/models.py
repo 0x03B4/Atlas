@@ -40,7 +40,7 @@ class Lecturer(models.Model):
     employee_id = models.CharField(max_length=20)
     lecturer_type = models.CharField(max_length=20, choices=LECTURER_TYPE_CHOICES, default='Lecturer')
     joined_year = models.IntegerField()
-    expertise_areas = models.TextField()
+    expertise_areas = models.TextField(help_text="Comma-separated list of expertise areas.")
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -71,6 +71,17 @@ class Module(models.Model):
 
     def __str__(self):
         return f"{self.code} - {self.name}"
+
+
+class LearningOutcome(models.Model):
+    module = models.ForeignKey(Module, on_delete=models.CASCADE, related_name='learning_outcomes')
+    description = models.TextField()
+
+    class Meta:
+        ordering = ['id']
+
+    def __str__(self):
+        return f"{self.module.code} - Learning Outcome {self.id}"
 
 
 class QualificationModule(models.Model):
