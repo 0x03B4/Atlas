@@ -73,12 +73,17 @@ class Qualification(models.Model):
 
 
 class Module(models.Model):
+    SEMESTER_CHOICES = [
+        (1, 'Semester 1'),
+        (2, 'Semester 2'),
+    ]
+    
     name = models.CharField(max_length=255)
     code = models.CharField(max_length=20)
     description = models.TextField()
     credits = models.IntegerField()
     year = models.IntegerField()
-    semester = models.IntegerField()
+    semester = models.IntegerField(choices=SEMESTER_CHOICES, default=1)
     lecturers = models.ManyToManyField(Lecturer)
     prerequisites = models.ManyToManyField('self', symmetrical=False, blank=True, related_name='prerequisite_for')
     corequisites = models.ManyToManyField('self', symmetrical=False, blank=True, related_name='corequisite_for')
