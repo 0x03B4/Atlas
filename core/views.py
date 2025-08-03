@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.core.paginator import Paginator
-from .models import Qualification
+from .models import Qualification, Module
 
 
 from django.shortcuts import render
@@ -49,3 +49,40 @@ def program_detail(request, pk):
         'auxiliary_modules_count': auxiliary_modules_count,
     }
     return render(request, 'program_detail.html', context)
+
+def modules_view(request):
+    search_query = request.GET.get('q', '')
+    selected_year = request.GET.get('year', '')
+    selected_semester = request.GET.get('semester', '')
+
+    modules_list = Module.objects.all().order_by('name')
+    if search_query:
+        modules_list = modules_list.filter(
+            Q(name__icontains=search_query) |
+            Q(code__icontains=search_query) |
+            Q(description__icontains=search_query)
+        )
+    if selected_year:
+        modules_list = modules_list.filter(year=selected_year)
+    if selected_semester:
+        modules_list = modules_list.filter(semester=selected_semester)
+
+    paginator = Paginator(modules_list, 9)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    year_choices = Module.objects.values_list('year', flat=True).distinct().order_by('year')
+
+    context = {
+        'page_obj': page_obj,
+        'search_query': search_query,
+        'year_choices': year_choices,
+        'semester_choices': Module.SEMESTER_CHOICES,
+        'selected_year': int(selected_year) if selected_year else '',
+        'selected_semester': int(selected_semester) if selected_semester else '',
+    }
+    return render(request, 'modules_view.html', context)
+
+def module_detail(request, pk):
+    module = get_object_or_404(Module.objects.prefetch_related('learning_outcomes'), pk=pk)
+    return render(request, 'module_detail.html', {'module': module})

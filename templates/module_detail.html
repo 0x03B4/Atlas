@@ -1,0 +1,153 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ module.name }} - Atlas{% endblock %}
+
+{% block content %}
+<!-- Main Content -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Course Header -->
+    <div class="mb-8">
+        <div class="flex items-center mb-4">
+            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium mr-4">{{ module.code }}</span>
+            <span class="text-gray-600 text-sm">Year {{ module.year }}</span>
+        </div>
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ module.name }}</h1>
+        <p class="text-gray-600 text-lg leading-relaxed">
+            {{ module.description }}
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Left Column -->
+        <div class="lg:col-span-2">
+            <!-- Learning Outcomes -->
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Learning Outcomes</h2>
+                <div class="space-y-4">
+                    {% for outcome in module.learning_outcomes.all %}
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mt-1">
+                            <div class="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center">
+                                <svg class="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <p class="ml-3 text-gray-700">
+                            {{ outcome.description }}
+                        </p>
+                    </div>
+                    {% empty %}
+                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                            <p class="text-sm text-gray-500">
+                                No learning outcomes have been specified for this module yet.
+                            </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Module Lecturers -->
+            <section>
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Module Lecturers</h2>
+                {% for lecturer in module.lecturers.all %}
+                <div class="bg-white rounded-lg border border-gray-200 p-6 mb-4">
+                    <div class="flex items-start">
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-900">{{ lecturer.get_title_display }} {{ lecturer.first_name }} {{ lecturer.last_name }}</h3>
+                            <p class="text-gray-600 text-sm">{{ lecturer.get_lecturer_type_display }}</p>
+                            <a href="{% url 'lecturer_detail' lecturer.pk %}" class="text-blue-500 hover:text-blue-600 text-sm mt-1 inline-block">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </section>
+        </div>
+
+        <!-- Right Column -->
+        <div class="lg:col-span-1">
+            <!-- Module Information -->
+            <section class="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Module Information</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Code</span>
+                        <span class="font-medium text-gray-900">{{ module.code }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Credits</span>
+                        <span class="font-medium text-gray-900">{{ module.credits }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Year</span>
+                        <span class="font-medium text-gray-900">{{ module.year }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Semester</span>
+                        <span class="font-medium text-gray-900">{{ module.semester }}</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Module Requirements -->
+            <section class="bg-white rounded-lg border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Module Requirements</h3>
+                
+                <div class="mb-6">
+                    <h4 class="text-sm font-medium text-gray-700 mb-3">Prerequisites</h4>
+                    {% if module.prerequisites.all %}
+                        {% for prereq in module.prerequisites.all %}
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-2">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <span class="ml-2 text-sm text-blue-700">{{ prereq.code }}</span>
+                                </div>
+                                <a href="{% url 'module_detail' prereq.pk %}" class="text-blue-500 hover:text-blue-600 text-sm">View</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                <svg class="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <span class="ml-2 text-sm text-green-700">No prerequisites required</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <h4 class="text-sm font-medium text-gray-700 mb-3">Corequisites</h4>
+                    {% if module.corequisites.all %}
+                        {% for coreq in module.corequisites.all %}
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-2">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <span class="ml-2 text-sm text-blue-700">{{ coreq.code }}</span>
+                                </div>
+                                <a href="{% url 'module_detail' coreq.pk %}" class="text-blue-500 hover:text-blue-600 text-sm">View</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                <svg class="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <span class="ml-2 text-sm text-green-700">No corequisites required</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}
