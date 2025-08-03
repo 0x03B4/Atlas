@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Atlas{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-gradient {
+            background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+        }
+        .text-shadow {
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .hover-scale {
+            transition: transform 0.2s ease-in-out;
+        }
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+        .graduation-overlay {
+            background: linear-gradient(45deg, rgba(0,0,0,0.7), rgba(0,0,0,0.3));
+        }
+    </style>
+</head>
+<body class="font-sans antialiased">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <a href="{% url 'home' %}" class="text-2xl font-bold text-green-600">Atlas</a>
+                </div>
+                
+                <!-- Navigation Links -->
+                <div class="hidden md:block">
+                    <div class="flex items-center space-x-8">
+                        <a href="{% url 'programs_view' %}" class="text-gray-700 hover:text-green-600 px-3 py-2 text-sm font-medium transition-colors">Qualifications</a>
+                        <a href="{% url 'modules_view' %}" class="text-gray-700 hover:text-green-600 px-3 py-2 text-sm font-medium transition-colors">Modules</a>
+                        <a href="{% url 'lecturers_view' %}" class="text-gray-700 hover:text-green-600 px-3 py-2 text-sm font-medium transition-colors">Lecturers</a>
+                        <a href="{% url 'resources_view' %}" class="text-gray-700 hover:text-green-600 px-3 py-2 text-sm font-medium transition-colors">Resources</a>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex items-center space-x-4">
+                    {% if user.is_authenticated %}
+                                                {% if user.is_staff %}
+                            <a href="{% url 'admin:index' %}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors hover-scale">
+                                Admin
+                            </a>
+                        {% else %}
+                            <a href="{% url 'student_dashboard' %}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors hover-scale">
+                                Dashboard
+                            </a>
+                        {% endif %}
+                        <a href="{% url 'student_logout' %}" class="border border-gray-300 hover:border-green-500 text-gray-700 hover:text-green-600 px-4 py-2 rounded-md text-sm font-medium transition-colors hover-scale">
+                            Logout
+                        </a>
+                    {% else %}
+                        <a href="{% url 'student_login' %}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors hover-scale">
+                            Sign In
+                        </a>
+                        <a href="{% url 'student_signup' %}" class="border border-gray-300 hover:border-green-500 text-gray-700 hover:text-green-600 px-4 py-2 rounded-md text-sm font-medium transition-colors hover-scale">
+                            Get Started
+                        </a>
+                    {% endif %}
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button class="text-gray-400 hover:text-gray-500 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+</body>
+</html>
