@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q, Count
 from django.core.paginator import Paginator
-from .models import Qualification, Module, Lecturer
+from .models import Qualification, Module, Lecturer, AcademicRule
 
 
 from django.shortcuts import render
@@ -121,3 +121,7 @@ def lecturers_view(request):
 def lecturer_detail(request, pk):
     lecturer = get_object_or_404(Lecturer, pk=pk)
     return render(request, 'lecturer_detail.html', {'lecturer': lecturer})
+
+def resources_view(request):
+    rules = AcademicRule.objects.all()
+    return render(request, 'resources_view.html', {'rules': rules})

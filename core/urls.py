@@ -10,4 +10,5 @@ urlpatterns = [
     path('module/<int:pk>/', views.module_detail, name='module_detail'),
     path('lecturers/', views.lecturers_view, name='lecturers_view'),
     path('lecturer/<int:pk>/', views.lecturer_detail, name='lecturer_detail'),
+    path('resources/', views.resources_view, name='resources_view'),
 ]
