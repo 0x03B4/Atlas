@@ -1,7 +1,10 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from django.contrib import messages
 from django.db.models import Q, Count
 from django.core.paginator import Paginator
-from .models import Qualification, Module, Lecturer, AcademicRule
+from .models import Qualification, Module, Lecturer, AcademicRule, Student
 
 
 from django.shortcuts import render
@@ -125,3 +128,47 @@ def lecturer_detail(request, pk):
 def resources_view(request):
     rules = AcademicRule.objects.all()
     return render(request, 'resources_view.html', {'rules': rules})
+
+def student_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('student_dashboard') 
+        else:
+            return render(request, 'student_login.html', {'error_message': 'Invalid username or password.'})
+    return render(request, 'student_login.html')
+
+def student_logout(request):
+    """Logs the student out and redirects to the login page."""
+    logout(request)
+    messages.success(request, "You have been successfully logged out.")
+    return redirect('student_login')
+
+def student_signup(request):
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        if User.objects.filter(username=email).exists():
+            messages.error(request, 'This email is already registered.')
+            return render(request, 'student_signup.html')
+
+        try:
+            user = User.objects.create_user(username=email, email=email, password=password)
+            user.first_name = first_name
+            user.last_name = last_name
+            user.save()
+            
+            Student.objects.create(user=user) # Create a student profile for the new user
+
+            messages.success(request, 'Account created successfully! Please log in.')
+            return redirect('student_login') # Redirect to login page after successful signup
+        except Exception as e:
+            messages.error(request, f'Error creating account: {e}')
+            return render(request, 'student_signup.html')
+    return render(request, 'student_signup.html')
