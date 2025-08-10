@@ -1,0 +1,102 @@
+
+{% extends 'student_base.html' %}
+
+{% block title %}Atlas - My Qualification{% endblock %}
+
+{% block student_content %}
+<h1 class="text-3xl font-bold text-gray-900 mb-8 text-center">My Qualification</h1>
+
+<div class="grid grid-cols-3 gap-12 pt-16">
+    <!-- Left Content -->
+    <div class="col-span-2">
+        <!-- Program Title and Description -->
+        <div class="mb-12">
+            <h1 class="text-4xl font-bold text-gray-900 mb-6 leading-tight">{{ qualification.name }}</h1>
+            <p class="text-gray-600 text-lg leading-relaxed">{{ qualification.description }}</p>
+        </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="col-span-1 flex">
+        <div class="bg-white rounded-lg p-6 shadow-sm w-full h-full flex flex-col">
+            <h3 class="text-lg font-semibold text-gray-900 mb-6 text-center">Program Overview</h3>
+            
+            <div class="space-y-4 flex-1">
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Duration</span>
+                    <span class="font-semibold">{{ qualification.duration_years }} Years</span>
+                </div>
+                
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Total Credits</span>
+                    <span class="font-semibold">{{ qualification.total_credits }} Credits</span>
+                </div>
+                
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Total Modules</span>
+                    <span class="font-semibold">{{ qualification.total_modules }} Modules</span>
+                </div>
+                
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Format</span>
+                    <span class="font-semibold">{{ qualification.format }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics (Full Width, Centered) -->
+<div class="flex justify-center my-16 pt-24 pb-24">
+    <div class="grid grid-cols-4 gap-12 text-center">
+        <div>
+            <div class="text-4xl font-bold text-blue-500 mb-2">{{ core_modules_count }}</div>
+            <div class="text-gray-600">Core Modules</div>
+        </div>
+        <div>
+            <div class="text-4xl font-bold text-green-500 mb-2">{{ auxiliary_modules_count }}</div>
+            <div class="text-gray-600">Auxiliary Modules</div>
+        </div>
+        <div>
+            <div class="text-4xl font-bold text-orange-500 mb-2">{{ qualification.duration_years }}</div>
+            <div class="text-gray-600">Years</div>
+        </div>
+        <div>
+            <div class="text-4xl font-bold text-teal-500 mb-2">{{ qualification.semesters }}</div>
+            <div class="text-gray-600">Semesters</div>
+        </div>
+    </div>
+</div>
+
+{% for year, semesters in modules_by_year.items %}
+<!-- Year {{ year }} -->
+<div class="mb-8">
+    <h3 class="text-2xl font-bold text-gray-900 mb-6">Year {{ year }}</h3>
+    
+    {% for semester, modules in semesters.items %}
+    <!-- Semester {{ semester }} -->
+    <div class="mb-8">
+        <div class="flex justify-between items-center mb-4">
+            <h4 class="text-lg font-semibold text-gray-900">Semester {{ semester }}</h4>
+            <span class="text-gray-500 text-sm">{{ modules|length }} Modules • {% widthratio modules|length 1 12 %} Credits</span>
+        </div>
+        
+        <div class="grid grid-cols-3 gap-4">
+            {% for qm in modules %}
+            <!-- Module -->
+            <div class="bg-white rounded-lg p-4 shadow-sm">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">{{ qm.module_type }}</span>
+                    <span class="text-gray-600 text-sm">{{ qm.module.credits }} Credits</span>
+                </div>
+                <h5 class="font-semibold text-gray-900 mb-1">{{ qm.module.code }}</h5>
+                <p class="text-gray-600 text-sm mb-3">{{ qm.module.name }}</p>
+                <a href="{% url 'module_detail' qm.module.pk %}" class="text-blue-500 text-sm hover:underline">View Details</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endfor %}
+{% endblock %}

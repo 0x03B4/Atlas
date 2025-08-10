@@ -1,13 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.models import Q, Count
 from django.core.paginator import Paginator
-from .models import Qualification, Module, Lecturer, AcademicRule, Student
-
-
-from django.shortcuts import render
+from .models import Qualification, Module, Lecturer, Student, AcademicRule
+from .forms import StudentProfileForm
 
 def home(request):
     return render(request, 'home.html')
@@ -172,3 +171,74 @@ def student_signup(request):
             messages.error(request, f'Error creating account: {e}')
             return render(request, 'student_signup.html')
     return render(request, 'student_signup.html')
+
+@login_required
+def student_dashboard(request):
+    student = get_object_or_404(Student, user=request.user)
+    dashboard_context = student.get_dashboard_context()
+
+    if not dashboard_context:
+        messages.info(request, "Please complete your profile, including qualification, current year, and semester, to view the dashboard.")
+        return redirect('student_profile')
+
+    return render(request, 'student_dashboard.html', dashboard_context)
+
+@login_required
+def student_modules(request):
+    student = get_object_or_404(Student, user=request.user)
+    if not all([student.qualification, student.current_year, student.current_semester]):
+        messages.info(request, "Please complete your profile, including qualification, current year, and semester, to view your modules.")
+        return redirect('student_profile')
+        
+    qualification = student.qualification
+
+    current_semester_modules = Module.objects.filter(
+        year=student.current_year,
+        semester=student.current_semester,
+        qualificationmodule__qualification=qualification
+    )
+
+    context = {
+        'current_semester_modules': current_semester_modules,
+    }
+    return render(request, 'student_modules.html', context)
+
+@login_required
+def student_qualification(request):
+    student = get_object_or_404(Student, user=request.user)
+    if student.qualification is None:
+        messages.info(request, "Please select a qualification on your profile to view its details.")
+        return redirect('student_profile')
+        
+    qualification = student.qualification
+    modules_by_year = qualification.get_modules_by_year_and_semester()
+
+    core_modules_count = qualification.qualificationmodule_set.filter(module_type='Core').count()
+    auxiliary_modules_count = qualification.qualificationmodule_set.filter(module_type='Auxiliary').count()
+
+    context = {
+        'qualification': qualification,
+        'modules_by_year': modules_by_year,
+        'core_modules_count': core_modules_count,
+        'auxiliary_modules_count': auxiliary_modules_count,
+    }
+    return render(request, 'student_qualification.html', context)
+
+@login_required
+def student_profile(request):
+    student = get_object_or_404(Student, user=request.user)
+
+    if request.method == 'POST':
+        form = StudentProfileForm(request.POST, instance=student, user=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your profile has been updated successfully!')
+            return redirect('student_profile')
+    else:
+        form = StudentProfileForm(instance=student, user=request.user)
+
+    context = {
+        'student': student,
+        'form': form,
+    }
+    return render(request, 'student_profile.html', context)

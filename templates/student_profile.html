@@ -1,0 +1,98 @@
+
+{% extends 'student_base.html' %}
+
+{% block title %}Atlas - Profile{% endblock %}
+
+{% block student_content %}
+<div class="max-w-4xl mx-auto">
+    <h2 class="text-2xl font-semibold text-gray-900 mb-8 text-center">Profile</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="mb-6 p-4 rounded-md 
+                {% if message.tags == 'success' %}bg-green-100 border border-green-400 text-green-700
+                {% elif message.tags == 'info' %}bg-blue-100 border border-blue-400 text-blue-700
+                {% else %}bg-red-100 border border-red-400 text-red-700
+                {% endif %}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <div class="bg-white rounded-lg shadow-sm p-8">
+        <form method="post">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="mb-6 p-4 rounded-md bg-red-100 border border-red-400 text-red-700">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <!-- First Name and Last Name Row -->
+            <div class="grid grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                    {{ form.first_name }}
+                    {% for error in form.first_name.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div>
+                    <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                    {{ form.last_name }}
+                    {% for error in form.last_name.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Email Address -->
+            <div class="mb-6">
+                <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                {{ form.email }}
+                {% for error in form.email.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <!-- Current Qualification -->
+            <div class="mb-6">
+                <label for="{{ form.qualification.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">Current Qualification</label>
+                {{ form.qualification }}
+                {% for error in form.qualification.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <!-- Current Year and Current Semester Row -->
+            <div class="grid grid-cols-2 gap-6 mb-8">
+                <div>
+                    <label for="{{ form.current_year.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">Current Year</label>
+                    {{ form.current_year }}
+                    {% for error in form.current_year.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div>
+                    <label for="{{ form.current_semester.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">Current Semester</label>
+                    {{ form.current_semester }}
+                    {% for error in form.current_semester.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Save Changes Button -->
+            <div class="flex justify-end">
+                <button 
+                    type="submit" 
+                    class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors"
+                >
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

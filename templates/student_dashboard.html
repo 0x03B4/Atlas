@@ -1,0 +1,99 @@
+
+{% extends 'student_base.html' %}
+
+{% block title %}Atlas Dashboard{% endblock %}
+
+{% block student_content %}
+<!-- Header -->
+<h1 class="text-3xl font-bold text-gray-900 mb-8 text-center">Dashboard</h1>
+
+<!-- Stats Cards -->
+<div class="grid grid-cols-4 gap-6 mb-8">
+    <!-- Current Year -->
+    <div class="bg-white rounded-lg shadow-sm p-6">
+        <h3 class="text-sm font-medium text-gray-500 mb-2">Current Year</h3>
+        <div class="text-3xl font-bold text-gray-900 mb-1">{{ student.current_year }}</div>
+        <p class="text-sm text-gray-500">Year {{ student.current_year }} of {{ student.qualification.duration_years }}</p>
+    </div>
+    
+    <!-- Current Semester -->
+    <div class="bg-white rounded-lg shadow-sm p-6">
+        <h3 class="text-sm font-medium text-gray-500 mb-2">Current Semester</h3>
+        <div class="text-3xl font-bold text-gray-900 mb-1">{{ student.current_semester }}</div>
+        <p class="text-sm text-gray-500">Semester {{ student.current_semester }}</p>
+    </div>
+    
+    <!-- Total Modules -->
+    <div class="bg-white rounded-lg shadow-sm p-6">
+        <h3 class="text-sm font-medium text-gray-500 mb-2">Total Modules</h3>
+        <div class="text-3xl font-bold text-gray-900 mb-1">{{ student.qualification.total_modules }}</div>
+        <p class="text-sm text-gray-500">Across all years</p>
+    </div>
+    
+    <!-- Current Modules -->
+    <div class="bg-white rounded-lg shadow-sm p-6">
+        <h3 class="text-sm font-medium text-gray-500 mb-2">Current Modules</h3>
+        <div class="text-3xl font-bold text-gray-900 mb-1">{{ current_modules_count }}</div>
+        <p class="text-sm text-gray-500">This semester</p>
+    </div>
+</div>
+
+<!-- Module Distribution -->
+<div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+    <h2 class="text-xl font-semibold text-gray-900 mb-6">Module Distribution</h2>
+    
+    <div class="space-y-4">
+        {% for year, count in module_distribution.items %}
+        <div class="flex justify-between items-center">
+            <span class="text-gray-700">Year {{ year }} Modules</span>
+            <span class="font-semibold text-gray-900">{{ count }} modules</span>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="mt-6 text-center">
+        <a href="{% url 'student_modules' %}" class="text-blue-600 hover:text-blue-800 text-sm">View Modules</a>
+    </div>
+</div>
+
+<!-- Academic Progress -->
+<div class="bg-white rounded-lg shadow-sm p-6">
+    <h2 class="text-xl font-semibold text-gray-900 mb-6">Academic Progress</h2>
+    
+    <div class="space-y-6">
+        {% for year, progress in academic_progress.items %}
+        <div>
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-medium text-gray-700">Year {{ year }} {{ progress.status }}</span>
+                <span class="text-sm font-semibold text-gray-900">{{ progress.credits_earned }}/{{ progress.total_credits }} Credits</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="h-2 rounded-full {% if progress.status == 'Completed' %}progress-bar-green{% else %}progress-bar-blue{% endif %}" style="width: {{ progress.percentage }}%"></div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Summary Stats -->
+    <div class="grid grid-cols-3 gap-8 mt-8 pt-6 border-t border-gray-200">
+        <div class="text-center">
+            <div class="text-3xl font-bold text-green-500 mb-1">{{ total_credits_earned }}</div>
+            <p class="text-sm text-gray-500">Credits Earned</p>
+        </div>
+        
+        <div class="text-center">
+            <div class="text-3xl font-bold text-orange-500 mb-1">{{ credits_remaining }}</div>
+            <p class="text-sm text-gray-500">Credits Remaining</p>
+        </div>
+        
+        <div class="text-center">
+            <div class="text-3xl font-bold text-blue-500 mb-1">{{ overall_progress }}%</div>
+            <p class="text-sm text-gray-500">Overall Progress</p>
+        </div>
+    </div>
+    
+    <div class="mt-6 text-center">
+        <a href="{% url 'student_qualification' %}" class="text-blue-600 hover:text-blue-800 text-sm">View Qualification</a>
+    </div>
+</div>
+{% endblock %}
