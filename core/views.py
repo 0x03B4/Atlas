@@ -94,7 +94,7 @@ def lecturers_view(request):
     selected_type = request.GET.get('type', '')
     selected_qual = request.GET.get('qual', '')
 
-    lecturers_list = Lecturer.objects.annotate(module_count=Count('module')).order_by('last_name', 'first_name')
+    lecturers_list = Lecturer.objects.annotate(module_count=Count('modules')).order_by('last_name', 'first_name')
     if search_query:
         lecturers_list = lecturers_list.filter(
             Q(first_name__icontains=search_query) |

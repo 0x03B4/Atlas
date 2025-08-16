@@ -86,7 +86,11 @@
                 <!-- Module -->
                 <div class="bg-white rounded-lg p-4 shadow-sm">
                     <div class="flex justify-between items-start mb-2">
-                        <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">{{ qm.module_type }}</span>
+                        {% if qm.module_type == "Auxiliary" %}
+                            <span class="bg-green-200 text-green-500 text-xs px-2 py-1 rounded">{{ qm.module_type }}</span>
+                        {% else %}
+                            <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">{{ qm.module_type }}</span>
+                        {% endif %}
                         <span class="text-gray-600 text-sm">{{ qm.module.credits }} Credits</span>
                     </div>
                     <h5 class="font-semibold text-gray-900 mb-1">{{ qm.module.code }}</h5>
