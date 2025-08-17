@@ -42,7 +42,14 @@ class StudentProfileForm(forms.ModelForm):
         
         self.fields['qualification'].queryset = Qualification.objects.all()
         self.fields['qualification'].empty_label = "Select a Qualification"
-        self.fields['current_year'].choices = [('', 'Select Year')] + [(i, f'Year {i}') for i in range(1, 5)]
+
+        year_choices = [('', 'Select Year')]
+
+        if self.instance and self.instance.qualification:
+            max_year = self.instance.qualification.duration_years
+            year_choices += [(i, f'Year {i}') for i in range(1, max_year + 1)]
+        
+        self.fields['current_year'].choices = year_choices
         self.fields['current_semester'].choices = [('', 'Select Semester')] + [(i, f'Semester {i}') for i in range(1, 3)]
 
     def clean_email(self):
