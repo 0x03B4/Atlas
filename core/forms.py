@@ -45,8 +45,18 @@ class StudentProfileForm(forms.ModelForm):
 
         year_choices = [('', 'Select Year')]
 
-        if self.instance and self.instance.qualification:
-            max_year = self.instance.qualification.duration_years
+        qualification = None
+        if self.instance and self.instance.pk and self.instance.qualification:
+            qualification = self.instance.qualification
+        elif 'qualification' in self.data:
+            try:
+                qual_id = int(self.data.get('qualification'))
+                qualification = Qualification.objects.get(pk=qual_id)
+            except (ValueError, TypeError, Qualification.DoesNotExist):
+                pass
+
+        if qualification:
+            max_year = qualification.duration_years
             year_choices += [(i, f'Year {i}') for i in range(1, max_year + 1)]
         
         self.fields['current_year'].choices = year_choices
