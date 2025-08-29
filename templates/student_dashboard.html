@@ -68,7 +68,7 @@
                 <span class="text-sm font-semibold text-gray-900">{{ progress.credits_earned }}/{{ progress.total_credits }} Credits</span>
             </div>
             <div class="w-full bg-gray-200 rounded-full h-2">
-                <div class="h-2 rounded-full {% if progress.status == 'Completed' %}progress-bar-green{% else %}progress-bar-blue{% endif %}" style="width: {{ progress.percentage }}%"></div>
+                <div class="h-2 rounded-full {% if progress.status == 'Completed' %}bg-green-500{% else %}bg-blue-500{% endif %}" style="width: {{ progress.percentage }}%"></div>
             </div>
         </div>
         {% endfor %}
