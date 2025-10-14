@@ -53,7 +53,7 @@
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h3 class="text-xl font-semibold text-gray-900 mb-1">{{ lecturer.get_title_display }} {{ lecturer.first_name }} {{ lecturer.last_name }}</h3>
             <p class="text-blue-500 text-sm mb-4">{{ lecturer.get_lecturer_type_display }}</p>
-            <p class="text-gray-600 text-sm mb-6">{{ lecturer.bio|truncatewords:20 }}</p>
+            <p class="text-gray-600 text-sm mb-6">{{ lecturer.bio|truncatewords:15 }}</p>
             
             <div class="flex items-center space-x-4 mb-6 text-sm text-gray-500">
                 <div class="flex items-center space-x-1">
