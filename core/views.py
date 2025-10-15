@@ -137,7 +137,8 @@ def student_login(request):
             login(request, user)
             return redirect('student_dashboard') 
         else:
-            return render(request, 'student_login.html', {'error_message': 'Invalid username or password.'})
+            messages.error(request, 'Invalid username or password. Please try again.')
+            return render(request, 'student_login.html')
     return render(request, 'student_login.html')
 
 def student_logout(request):
