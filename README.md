@@ -56,6 +56,7 @@ Atlas is a Django-based student information system designed to manage academic i
 
 The main dependencies used in this project are:
 
+*   Python 3.13.5
 *   Django
 *   django-import-export
 
