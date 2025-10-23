@@ -1,6 +1,6 @@
 # Atlas
 
-Atlas is a Django-based student information system designed to manage academic information for the Faculty of Natural and Agricultural Sciences. It provides a platform for students to view their academic progress and for the institution to manage lecturers, qualifications and modules.
+Atlas is a Django-based student information system designed to manage academic information for the Faculty of Natural and Agricultural Sciences. It provides a platform for students to view their academic progress and for the faculty to manage lecturers' profiles, academic documents, qualifications and modules.
 
 ## Features
 
