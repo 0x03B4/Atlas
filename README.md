@@ -15,7 +15,7 @@ Atlas is a Django-based student information system designed to manage academic i
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/your-username/atlas.git
+    git clone https://github.com/0x03b4/atlas.git
     cd atlas
     ```
 
